@@ -4,6 +4,7 @@ pipeline {
     environment {
         BACKEND_IMAGE = 'grandt-backend'
         FRONTEND_IMAGE = 'grandt-frontend'
+        DB_CONTAINER = 'grandt-db'  // Contenedor de base de datos
     }
 
     stages {
@@ -32,12 +33,18 @@ pipeline {
         stage('Levantar Contenedores') {
             steps {
                 script {
+                    // Eliminar contenedores existentes si están corriendo
                     sh 'docker rm -f grandt-backend || true'
                     sh 'docker rm -f grandt-frontend || true'
+                    sh 'docker rm -f grandt-db || true'  // Eliminar contenedor de DB si ya existe
 
-                
+                    // Levantar contenedor de la base de datos (ejemplo con PostgreSQL)
+                    sh 'docker run -d --name ${DB_CONTAINER} -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres:latest'
 
-                    sh ' docker run -d --name grandt-backend -p 8081:8080 grandt-backend:latest'
+                    // Levantar contenedor del backend
+                    sh 'docker run -d --name grandt-backend -p 8081:8080 --link ${DB_CONTAINER}:db ${BACKEND_IMAGE}:latest'
+
+                    // Levantar contenedor del frontend
                     sh 'docker run -d --name grandt-frontend -p 3000:3000 ${FRONTEND_IMAGE}:latest'
                 }
             }
@@ -50,3 +57,4 @@ pipeline {
         }
     }
 }
+
