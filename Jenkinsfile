@@ -11,7 +11,7 @@ pipeline {
         stage('Build backend') {
             steps {
                 dir('backend') {
-                    sh 'docker build -t grandt-backend .'
+                    sh 'docker build -t backend .'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Build frontend') {
             steps {
                 dir('frontend') {
-                    sh 'docker build -t grandt-frontend .'
+                    sh 'docker build -t frontend .'
                 }
             }
         }
