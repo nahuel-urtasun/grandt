@@ -1,0 +1,53 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  margin-left: 80px; /* Mantiene el margen izquierdo existente */
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc; /* Mantiene un borde sutil */
+  border-radius: 24px;
+  font-size: 16px;
+  outline: none;
+  background-color: #f8f8f8; /* Fondo casi blanco para el input */
+  color: #333; /* Texto oscuro para mejor legibilidad */
+}
+
+/* Estilo para el input cuando está enfocado */
+input[type="text"]:focus {
+  border-color: #00F0FF; /* Color de acento al enfocar */
+  box-shadow: 0 0 5px rgba(0, 240, 255, 0.5); /* Sutil sombra de acento al enfocar */
+}
+
+button {
+  background-color: #FFFFFF; /* Fondo blanco para el botón */
+  color: #333; /* Texto oscuro para el botón */
+  border: 1px solid #ccc; /* Añade un borde sutil para definirlo */
+  border-radius: 24px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Transiciones suaves */
+}
+
+button:hover {
+  background-color: #f0f0f0; /* Un ligero gris al pasar el ratón */
+  border-color: #00F0FF; /* Borde de acento al pasar el ratón */
+  color: #000; /* Oscurece ligeramente el texto al pasar el ratón */
+}
+
+button:focus {
+  outline: none;
+  border-color: #00F0FF; /* Color de acento al enfocar */
+  box-shadow: 0 0 5px rgba(0, 240, 255, 0.5); /* Sutil sombra de acento al enfocar */
+}
+
+@media screen and (max-width: 1000px) {
+  .search-bar {
+    margin-left: 0;
+  }
+}

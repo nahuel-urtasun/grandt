@@ -1,0 +1,37 @@
+html {
+  font-size: 62.5%; /* Mantiene la base para rem */
+}
+
+body {
+  margin: 0;
+  font-family: 300 11px/1.4 'Red Hat Display', sans-serif; /* Mantiene tu fuente, puedes ajustarla */
+  color: #FFFFFF; 
+  background: #7a618d; 
+  display: block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #00F0FF; /* Pulgar de la barra de desplazamiento celeste */
+  border-radius: 5px;
+}
+
+/* Opcional: Estilos para la barra de desplazamiento cuando el contenido no es suficiente */
+body::-webkit-scrollbar-track {
+  background: #d772de; /* Fondo morado para la pista */
+}
+
+/* Puedes añadir más estilos generales aquí si lo necesitas, por ejemplo, para enlaces */
+a {
+  color: #00F0FF; /* Enlaces en color celeste */
+  text-decoration: none; /* Opcional: quitar el subrayado predeterminado */
+}
+
+a:hover {
+  text-decoration: underline; /* Opcional: subrayar al pasar el ratón */
+}

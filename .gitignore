@@ -1,0 +1,20 @@
+# Java / IntelliJ
+/backend/target/
+*.iml
+.idea/
+
+# Node / React
+/frontend/node_modules/
+frontend/.env.local
+frontend/.next/
+frontend/build/
+
+# General
+*.log
+.DS_Store
+.env
+.env.*
+
+# Docker
+**/.env
+**/docker-compose.override.yml
