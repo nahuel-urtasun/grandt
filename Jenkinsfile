@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build backend') {
             steps {
-                dir('backend') {
+                dir('Backend') {
                     sh 'docker build -t backend .'
                 }
             }
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build frontend') {
             steps {
-                dir('frontend') {
+                dir('Frontend') {
                     sh 'docker build -t frontend .'
                 }
             }
