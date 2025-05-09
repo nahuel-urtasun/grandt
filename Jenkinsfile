@@ -1,33 +1,50 @@
 pipeline {
     agent any
 
+    environment {
+        BACKEND_IMAGE = 'grandt-backend'
+        FRONTEND_IMAGE = 'grandt-frontend'
+    }
+
     stages {
-        stage('Clonar código') {
+        stage('Clonar Repo') {
             steps {
-                echo 'Código clonado desde GitHub'
+                git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master'
             }
         }
 
-        stage('Build backend') {
+        stage('Construir Backend') {
             steps {
                 dir('Backend') {
-                    sh 'docker build -t backend .'
+                    sh 'docker build -t ${BACKEND_IMAGE}:latest .'
                 }
             }
         }
 
-        stage('Build frontend') {
+        stage('Construir Frontend') {
             steps {
                 dir('Frontend') {
-                    sh 'docker build -t frontend .'
+                    sh 'docker build -t ${FRONTEND_IMAGE}:latest .'
                 }
             }
         }
 
-        stage('Levantar servicios') {
+        stage('Levantar Contenedores') {
             steps {
-                sh 'docker-compose up -d'
+                script {
+                    sh 'docker rm -f grandt-backend || true'
+                    sh 'docker rm -f grandt-frontend || true'
+
+                    sh 'docker run -d --name grandt-backend -p 8080:8080 ${BACKEND_IMAGE}:latest'
+                    sh 'docker run -d --name grandt-frontend -p 3000:3000 ${FRONTEND_IMAGE}:latest'
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completo.'
         }
     }
 }
