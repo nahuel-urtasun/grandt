@@ -35,7 +35,9 @@ pipeline {
                     sh 'docker rm -f grandt-backend || true'
                     sh 'docker rm -f grandt-frontend || true'
 
-                    sh 'docker run -d --name grandt-backend -p 8080:8080 ${BACKEND_IMAGE}:latest'
+                
+
+                    sh ' docker run -d --name grandt-backend -p 8081:8080 grandt-backend:latest'
                     sh 'docker run -d --name grandt-frontend -p 3000:3000 ${FRONTEND_IMAGE}:latest'
                 }
             }
