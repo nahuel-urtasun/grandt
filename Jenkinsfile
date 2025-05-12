@@ -43,7 +43,8 @@ pipeline {
                     sh 'docker volume create csv-volume'
 
                     // Copiar el archivo CSV al volumen de Docker
-                    sh 'docker run --rm -v csv-volume:/data alpine cp ${CSV_FILE_PATH} /data/players.csv'
+                    sh 'docker run --rm -v csv-volume:/data alpine cp /home/nwtn/GranDT/players.csv /data/players.csv'
+
 
                     // Levantar contenedor de la base de datos (ejemplo con PostgreSQL)
                     sh '''
