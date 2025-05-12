@@ -5,7 +5,7 @@ pipeline {
         BACKEND_IMAGE = 'grandt-backend'
         FRONTEND_IMAGE = 'grandt-frontend'
         DB_CONTAINER = 'grandt-db'  // Contenedor de base de datos
-        CSV_FILE_PATH = '/home/nwtn/GranDT/players.csv'  // Ruta del archivo CSV en tu máquina local
+        
     }
 
     stages {
@@ -43,7 +43,7 @@ pipeline {
                     sh 'docker volume create csv-volume'
 
                     // Copiar el archivo CSV al volumen de Docker
-                    sh 'docker run --rm -v csv-volume:/data alpine cp ${CSV_FILE_PATH} /data/players.csv'
+                    sh 'docker run --rm -v csv-volume:/data alpine cp /players.csv /data/players.csv'
 
                     // Levantar contenedor de la base de datos (ejemplo con PostgreSQL)
                     sh '''
