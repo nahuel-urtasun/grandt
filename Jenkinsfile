@@ -5,7 +5,7 @@ pipeline {
         BACKEND_IMAGE = 'grandt-backend'
         FRONTEND_IMAGE = 'grandt-frontend'
         DB_CONTAINER = 'grandt-db'  // Contenedor de base de datos
-        CSV_FILE_PATH = '/path/to/your/players.csv'  // Ruta del archivo CSV en tu máquina local
+        CSV_FILE_PATH = '/home/nwtn/GranDT/players.csv'  // Ruta del archivo CSV en tu máquina local
     }
 
     stages {
