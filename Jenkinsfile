@@ -42,7 +42,8 @@ pipeline {
                     sh 'docker volume create csv-volume'
 
                     // Copiar el archivo CSV (MODIFICACIÓN IMPORTANTE AQUÍ)
-                    sh 'docker run --rm -v csv-volume:/data -v ${WORKSPACE}:/repo alpine cp "/repo/players.csv" "/data/players.csv"'
+                    
+                    sh 'docker run --rm -v csv-volume:/data -v ${WORKSPACE}:/grandt alpine cp "/grandt/players.csv" "/data/players.csv"'
 
                     // Levantar PostgreSQL
                     sh '''
