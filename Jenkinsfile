@@ -5,7 +5,6 @@ pipeline {
         BACKEND_IMAGE = 'grandt-backend'
         FRONTEND_IMAGE = 'grandt-frontend'
         DB_CONTAINER = 'grandt-db'  // Contenedor de base de datos
-        CSV_FILE_PATH = '/path/to/your/players.csv'  // Ruta del archivo CSV en tu máquina local
     }
 
     stages {
@@ -39,22 +38,8 @@ pipeline {
                     sh 'docker rm -f grandt-frontend || true'
                     sh 'docker rm -f grandt-db || true'  // Eliminar contenedor de DB si ya existe
 
-                    // Crear volumen para compartir el archivo CSV con el contenedor de PostgreSQL
-                    sh 'docker volume create csv-volume'
-
-                    // Copiar el archivo CSV al volumen de Docker
-                    sh 'docker run --rm -v csv-volume:/data alpine cp /home/nwtn/GranDT/players.csv /data/players.csv'
-
-
                     // Levantar contenedor de la base de datos (ejemplo con PostgreSQL)
-                    sh '''
-                        docker run -d --name ${DB_CONTAINER} -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 \
-                        -v csv-volume:/docker-entrypoint-initdb.d \
-                        postgres:latest
-                    '''
-
-                    // Esperar a que el contenedor de DB esté listo
-                    sh 'sleep 20'
+                    sh 'docker run -d --name ${DB_CONTAINER} -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres:latest'
 
                     // Levantar contenedor del backend
                     sh 'docker run -d --name grandt-backend -p 8081:8080 --link ${DB_CONTAINER}:db ${BACKEND_IMAGE}:latest'
@@ -72,3 +57,5 @@ pipeline {
         }
     }
 }
+
+
