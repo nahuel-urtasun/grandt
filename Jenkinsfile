@@ -4,8 +4,7 @@ pipeline {
     environment {
         BACKEND_IMAGE = 'grandt-backend'
         FRONTEND_IMAGE = 'grandt-frontend'
-        DB_CONTAINER = 'grandt-db'  // Contenedor de base de datos
-        
+        DB_CONTAINER = 'grandt-db'
     }
 
     stages {
@@ -34,31 +33,31 @@ pipeline {
         stage('Levantar Contenedores') {
             steps {
                 script {
-                    // Eliminar contenedores existentes si están corriendo
+                    // Eliminar contenedores existentes
                     sh 'docker rm -f grandt-backend || true'
                     sh 'docker rm -f grandt-frontend || true'
-                    sh 'docker rm -f grandt-db || true'  // Eliminar contenedor de DB si ya existe
+                    sh 'docker rm -f grandt-db || true'
 
-                    // Crear volumen para compartir el archivo CSV con el contenedor de PostgreSQL
+                    // Crear volumen
                     sh 'docker volume create csv-volume'
 
-                    // Copiar el archivo CSV al volumen de Docker
-                    sh 'docker run --rm -v csv-volume:/data alpine cp "/grandt/players.csv" "/data/players.csv"'
+                    // Copiar el archivo CSV (MODIFICACIÓN IMPORTANTE AQUÍ)
+                    sh 'docker run --rm -v csv-volume:/data -v ${WORKSPACE}:/repo alpine cp "/repo/players.csv" "/data/players.csv"'
 
-                    // Levantar contenedor de la base de datos (ejemplo con PostgreSQL)
+                    // Levantar PostgreSQL
                     sh '''
                         docker run -d --name ${DB_CONTAINER} -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 \
                         -v csv-volume:/docker-entrypoint-initdb.d \
                         postgres:latest
                     '''
 
-                    // Esperar a que el contenedor de DB esté listo
+                    // Esperar inicialización
                     sh 'sleep 20'
 
-                    // Levantar contenedor del backend
+                    // Levantar backend
                     sh 'docker run -d --name grandt-backend -p 8081:8080 --link ${DB_CONTAINER}:db ${BACKEND_IMAGE}:latest'
 
-                    // Levantar contenedor del frontend
+                    // Levantar frontend
                     sh 'docker run -d --name grandt-frontend -p 3000:3000 ${FRONTEND_IMAGE}:latest'
                 }
             }
@@ -71,6 +70,5 @@ pipeline {
         }
     }
 }
-
 
 
