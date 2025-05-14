@@ -9,10 +9,10 @@ pipeline {
 
     stages {
         stage('Clonar Repo') {
-            steps {
-                git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master'
-            }
-        }
+    steps {
+        git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master', changelog: false, poll: false, credentialsId: 'tu-credential-id', scriptPath: 'Jenkinsfile', sparseCheckoutList: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/nahuel-urtasun/grandt.git', credentialsId: 'tu-credential-id']], reference: '', depth: 1, lfs: false, name: '', quiet: false, tags: false, timeout: 0, sparseCheckout: false, cloneOption: [depth: 1, noCheckout: false, reference: ''], delegate: false, directory: 'repo'
+       }
+     }
 
         stage('Construir Backend') {
             steps {
@@ -44,7 +44,7 @@ pipeline {
                     // Listar el contenido del directorio /grandt dentro del contenedor Alpine
                     echo '--- Listando el contenido de /grandt dentro del contenedor Alpine ---'
                     sh '''
-                        docker run --rm -v ${WORKSPACE}:/grandt alpine ls -l /grandt
+                       docker run --rm -v ${WORKSPACE}/repo:/grandt alpine ls -l /grandt
                     '''
                     echo '--- Fin de la lista de /grandt ---'
 
