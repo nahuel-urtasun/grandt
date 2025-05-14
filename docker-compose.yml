@@ -16,7 +16,9 @@ services:
       - "8081:8080"
     depends_on:
       - db
-  
+    volumes:
+      - csv-volume:/data  # Solo si necesitás acceder al CSV en backend
+
   frontend:
     build:
       context: ./Frontend
@@ -25,3 +27,4 @@ services:
 
 volumes:
   csv-volume:
+
