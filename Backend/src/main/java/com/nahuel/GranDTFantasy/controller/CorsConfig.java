@@ -13,7 +13,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://192.168.0.111:3000") // URL CORRECTA DE TU FRONTEND
+                        .allowedOrigins("http://192.168.0.111:3000") // URL CORRECTA DEL FRONTEND
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
             }
