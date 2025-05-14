@@ -11,41 +11,24 @@ pipeline {
         stage('Clonar Repo') {
             steps {
                 git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master'
-                dir('repo') {
-                    // Aquí dentro se ejecutarán los comandos dentro del directorio clonado
-                }
             }
         }
 
         stage('Construir Backend') {
+            steps {
+                dir('Backend') {
+                    sh 'docker build -t ${BACKEND_IMAGE}:latest .'
+                }
+            }
+        }
 
-            steps {
-
-                dir('Backend') {
-
-                    sh 'docker build -t ${BACKEND_IMAGE}:latest .'
-
-                }
-
-            }
-
-        }
-
-
-
-        stage('Construir Frontend') {
-
-            steps {
-
-                dir('Frontend') {
-
-                    sh 'docker build -t ${FRONTEND_IMAGE}:latest .'
-
-                }
-
-            }
-
-        }
+        stage('Construir Frontend') {
+            steps {
+                dir('Frontend') {
+                    sh 'docker build -t ${FRONTEND_IMAGE}:latest .'
+                }
+            }
+        }
 
         stage('Levantar Contenedores') {
             steps {
@@ -61,7 +44,7 @@ pipeline {
                     // Listar el contenido del directorio /grandt dentro del contenedor Alpine
                     echo '--- Listando el contenido de /grandt dentro del contenedor Alpine ---'
                     sh '''
-                        docker run --rm -v ${WORKSPACE}/repo:/grandt alpine ls -l /grandt
+                        docker run --rm -v ${WORKSPACE}:/grandt alpine ls -l /grandt
                     '''
                     echo '--- Fin de la lista de /grandt ---'
 
@@ -69,7 +52,7 @@ pipeline {
                     sh '''
                         docker run --rm \
                         -v csv-volume:/data \
-                        -v ${WORKSPACE}/repo:/grandt \
+                        -v ${WORKSPACE}:/grandt \
                         alpine sh -c "cp /grandt/init.sql /data/init.sql && cp /grandt/players.csv /data/players.csv"
                     '''
 
