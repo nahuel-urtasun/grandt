@@ -38,30 +38,41 @@ pipeline {
                     sh 'docker rm -f grandt-frontend || true'
                     sh 'docker rm -f grandt-db || true'
 
-                    // Crear volumen para el CSV
+                    // Crear volumen para SQL y CSV
                     sh 'docker volume create csv-volume'
 
-                    // Copiar el CSV al volumen (desde la raíz del repo)
-                    sh 'docker run --rm -v csv-volume:/data -v ${WORKSPACE}:/backend alpine cp "/backend/players.csv" "/data/players.csv"'
-
-                    // Levantar PostgreSQL con el volumen montado
+                    // Copiar init.sql y players.csv al volumen
                     sh '''
-                        docker run -d --name ${DB_CONTAINER} -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 \
+                        docker run --rm \
+                        -v csv-volume:/data \
+                        -v ${WORKSPACE}:/grandt \
+                        alpine sh -c "cp /grandt/init.sql /data/init.sql && cp /grandt/players.csv /data/players.csv"
+                    '''
+
+                    // Levantar PostgreSQL y montar el volumen en el punto de entrada
+                    sh '''
+                        docker run -d --name ${DB_CONTAINER} \
+                        -e POSTGRES_PASSWORD=mysecretpassword \
+                        -p 5432:5432 \
                         -v csv-volume:/docker-entrypoint-initdb.d \
                         postgres:latest
                     '''
 
-                    // Esperar inicialización de la DB
+                    // Esperar a que PostgreSQL se inicialice correctamente
                     sh 'sleep 20'
 
-                    // Levantar backend con acceso al volumen del CSV
-                    sh 'docker run -d --name grandt-backend -p 8081:8080 \
+                    // Levantar backend
+                    sh '''
+                        docker run -d --name grandt-backend -p 8081:8080 \
                         --link ${DB_CONTAINER}:db \
-                        -v csv-volume:/data \
-                        ${BACKEND_IMAGE}:latest'
+                        ${BACKEND_IMAGE}:latest
+                    '''
 
                     // Levantar frontend
-                    sh 'docker run -d --name grandt-frontend -p 3000:3000 ${FRONTEND_IMAGE}:latest'
+                    sh '''
+                        docker run -d --name grandt-frontend -p 3000:3000 \
+                        ${FRONTEND_IMAGE}:latest
+                    '''
                 }
             }
         }
@@ -73,5 +84,6 @@ pipeline {
         }
     }
 }
+
 
 
