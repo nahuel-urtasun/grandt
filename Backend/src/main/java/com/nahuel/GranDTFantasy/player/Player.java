@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class Player {
 
     @Id
-    @Column(name = "player_name")
+    @Column(name = "player")
     private String name;
 
     @Column(name = "nation")
