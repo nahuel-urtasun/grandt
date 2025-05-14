@@ -18,20 +18,34 @@ pipeline {
         }
 
         stage('Construir Backend') {
-            steps {
-                dir('repo/Backend') {
-                    sh 'docker build -t ${BACKEND_IMAGE}:latest .'
-                }
-            }
-        }
 
-        stage('Construir Frontend') {
-            steps {
-                dir('repo/Frontend') {
-                    sh 'docker build -t ${FRONTEND_IMAGE}:latest .'
-                }
-            }
-        }
+            steps {
+
+                dir('Backend') {
+
+                    sh 'docker build -t ${BACKEND_IMAGE}:latest .'
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('Construir Frontend') {
+
+            steps {
+
+                dir('Frontend') {
+
+                    sh 'docker build -t ${FRONTEND_IMAGE}:latest .'
+
+                }
+
+            }
+
+        }
 
         stage('Levantar Contenedores') {
             steps {
