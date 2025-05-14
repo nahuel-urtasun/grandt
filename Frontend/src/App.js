@@ -19,7 +19,7 @@ function App() {
 
     // Function to generate fetch URL based on query params
     const generateFetchUrl = () => {
-      let baseUrl = 'http://backend:8080/api/v1/player';
+      let baseUrl = 'http://backend:8081/api/v1/player';
       const queryParams = new URLSearchParams(location.search); // Get query params from URL
 
       // Dynamically construct the URL based on query params
