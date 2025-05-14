@@ -31,52 +31,56 @@ pipeline {
         }
 
         stage('Levantar Contenedores') {
-            steps {
-                script {
-                    // Eliminar contenedores existentes
-                    sh 'docker rm -f grandt-backend || true'
-                    sh 'docker rm -f grandt-frontend || true'
-                    sh 'docker rm -f grandt-db || true'
+    steps {
+        script {
+            // Eliminar contenedores existentes
+            sh 'docker rm -f grandt-backend || true'
+            sh 'docker rm -f grandt-frontend || true'
+            sh 'docker rm -f grandt-db || true'
 
-                    // Crear volumen para SQL y CSV
-                    sh 'docker volume create csv-volume'
+            // Crear volumen para SQL y CSV
+            sh 'docker volume create csv-volume'
 
-                    // Copiar init.sql y players.csv al volumen
-                    sh '''
-                        docker run --rm \
-                        -v csv-volume:/data \
-                        -v ${WORKSPACE}:/grandt \
-                        alpine sh -c "cp /grandt/init.sql /data/init.sql && cp /grandt/players.csv /data/players.csv"
-                    '''
+            // Listar el contenido del directorio /grandt dentro del contenedor Alpine
+            sh '''
+                docker run --rm -v ${WORKSPACE}:/grandt alpine ls -l /grandt
+            '''
 
-                    // Levantar PostgreSQL y montar el volumen en el punto de entrada
-                    sh '''
-                        docker run -d --name ${DB_CONTAINER} \
-                        -e POSTGRES_PASSWORD=mysecretpassword \
-                        -p 5432:5432 \
-                        -v csv-volume:/docker-entrypoint-initdb.d \
-                        postgres:latest
-                    '''
+            // Copiar init.sql y players.csv al volumen
+            sh '''
+                docker run --rm \
+                -v csv-volume:/data \
+                -v ${WORKSPACE}:/grandt \
+                alpine sh -c "cp /grandt/init.sql /data/init.sql && cp /grandt/players.csv /data/players.csv"
+            '''
 
-                    // Esperar a que PostgreSQL se inicialice correctamente
-                    sh 'sleep 20'
+            // Levantar PostgreSQL y montar el volumen en el punto de entrada
+            sh '''
+                docker run -d --name ${DB_CONTAINER} \
+                -e POSTGRES_PASSWORD=mysecretpassword \
+                -p 5432:5432 \
+                -v csv-volume:/docker-entrypoint-initdb.d \
+                postgres:latest
+            '''
 
-                    // Levantar backend
-                    sh '''
-                        docker run -d --name grandt-backend -p 8081:8080 \
-                        --link ${DB_CONTAINER}:db \
-                        ${BACKEND_IMAGE}:latest
-                    '''
+            // Esperar a que PostgreSQL se inicialice correctamente
+            sh 'sleep 20'
 
-                    // Levantar frontend
-                    sh '''
-                        docker run -d --name grandt-frontend -p 3000:3000 \
-                        ${FRONTEND_IMAGE}:latest
-                    '''
-                }
-            }
+            // Levantar backend
+            sh '''
+                docker run -d --name grandt-backend -p 8081:8080 \
+                --link ${DB_CONTAINER}:db \
+                ${BACKEND_IMAGE}:latest
+            '''
+
+            // Levantar frontend
+            sh '''
+                docker run -d --name grandt-frontend -p 3000:3000 \
+                ${FRONTEND_IMAGE}:latest
+            '''
         }
     }
+}
 
     post {
         always {
