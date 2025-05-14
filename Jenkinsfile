@@ -39,13 +39,13 @@ pipeline {
                     sh 'docker rm -f grandt-db || true'
 
                     // Levantar PostgreSQL y montar el volumen en el punto de entrada
-                    sh '''
-                        docker run -d --name ${DB_CONTAINER} \
-                        -e POSTGRES_PASSWORD=mysecretpassword \
-                        -p 5432:5432 \
-                        -v grandt-data:/docker-entrypoint-initdb.d \
-                        postgres:latest
-                    '''
+                 sh '''
+    docker run -d --name ${DB_CONTAINER} \
+    -e POSTGRES_PASSWORD=mysecretpassword \
+    -p 5433:5432 \
+    -v grandt-data:/docker-entrypoint-initdb.d \
+    postgres:latest
+'''
 
                     // Esperar a que PostgreSQL se inicialice correctamente
                     sh 'sleep 20'
