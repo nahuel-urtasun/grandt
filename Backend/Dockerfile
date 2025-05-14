@@ -4,4 +4,5 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 COPY . .
+RUN ls -l /app
 RUN mvn clean package -DskipTests
