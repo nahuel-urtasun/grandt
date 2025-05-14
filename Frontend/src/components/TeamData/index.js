@@ -9,14 +9,14 @@ const TeamData = () => {
   const [playerData, setPlayerData] = useState([]);
   const [playersToShow, setPlayersToShow] = useState(10);
   const [letterClass] = useState('text-animate');
-  
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const teamValue = params.get('team');
     const nationValue = params.get('nation');
     const positionValue = params.get('position');
     const nameValue = params.get('name');
-    
+
     if (teamValue) {
       axios.get(`http://192.168.0.111:8081/api/v1/player?team=${encodeURIComponent(teamValue)}`)
         .then(response => {
@@ -28,7 +28,7 @@ const TeamData = () => {
           setLoading(false);
         });
     } else if (nationValue){
-      axios.get(`http://192.168.0.111:8081/api/v1/player?team=${encodeURIComponent(teamValue)}`)
+      axios.get(`http://192.168.0.111:8081/api/v1/player?nation=${encodeURIComponent(nationValue)}`)
       .then(response => {
         setPlayerData(response.data);
         setLoading(false);
@@ -38,7 +38,7 @@ const TeamData = () => {
         setLoading(false);
       });
     } else if (positionValue){
-      axios.get(`http://192.168.0.111:8081/api/v1/player?team=${encodeURIComponent(teamValue)}`)
+      axios.get(`http://192.168.0.111:8081/api/v1/player?position=${encodeURIComponent(positionValue)}`)
       .then(response => {
         setPlayerData(response.data);
         setLoading(false);
@@ -48,7 +48,7 @@ const TeamData = () => {
         setLoading(false);
       });
     } else if (nameValue){
-      axios.get(`http://192.168.0.111:8081/api/v1/player?team=${encodeURIComponent(teamValue)}`)
+      axios.get(`http://192.168.0.111:8081/api/v1/player?name=${encodeURIComponent(nameValue)}`)
       .then(response => {
         setPlayerData(response.data);
         setLoading(false);
@@ -58,7 +58,7 @@ const TeamData = () => {
         setLoading(false);
       });
     }
-      else {
+    else {
       setLoading(false);
     }
   }, []);
@@ -70,7 +70,6 @@ const TeamData = () => {
   if (error) {
     return <p>Error: {error.message}</p>;
   }
-
 
   return (
     <div className={`fade-in ${loading ? 'loading' : ''}`}>
@@ -102,7 +101,7 @@ const TeamData = () => {
           {playerData.slice(0, playersToShow).map(player => (
             <tr key={player.name}>
               <td>{player.name || "N/A"}</td>
-              <td>{player.nation.split(" ")[0] || "N/A"}</td> {/* Extract country code */}
+              <td>{player.nation ? player.nation.split(" ")[0] : "N/A"}</td> {/* Extract country code */}
               <td>{player.position || "N/A"}</td>
               <td>{player.age || "N/A"}</td>
               <td>{player.mp || 0}</td>
@@ -110,7 +109,7 @@ const TeamData = () => {
               <td>{player.min || 0}</td>
               <td>{player.goals || 0}</td>
               <td>{player.assists || 0}</td>
-              <td>{player.penalties || 0}</td>
+              <td>{player.pk || 0}</td> {/* Corrected property name */}
               <td>{player.yellow_cards || 0}</td>
               <td>{player.red_cards || 0}</td>
               <td>{player.expected_goals || 0}</td>
