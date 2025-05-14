@@ -10,7 +10,10 @@ pipeline {
     stages {
         stage('Clonar Repo') {
             steps {
-                git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master', changelog: false, poll: false, credentialsId: 'tu-credential-id', scriptPath: 'Jenkinsfile', sparseCheckoutList: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/nahuel-urtasun/grandt.git', credentialsId: 'tu-credential-id']], reference: '', depth: 1, lfs: false, name: '', quiet: false, tags: false, timeout: 0, sparseCheckout: false, cloneOption: [depth: 1, noCheckout: false, reference: ''], delegate: false, directory: 'repo'
+                git url: 'https://github.com/nahuel-urtasun/grandt.git', branch: 'master'
+                dir('repo') {
+                    // Aquí dentro se ejecutarán los comandos dentro del directorio clonado
+                }
             }
         }
 
