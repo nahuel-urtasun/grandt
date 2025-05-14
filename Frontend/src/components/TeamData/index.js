@@ -27,38 +27,37 @@ const TeamData = () => {
           setError(error);
           setLoading(false);
         });
-    } else if (nationValue){
+    } else if (nationValue) {
       axios.get(`http://192.168.0.111:8081/api/v1/player?nation=${encodeURIComponent(nationValue)}`)
-      .then(response => {
-        setPlayerData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-    } else if (positionValue){
+        .then(response => {
+          setPlayerData(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(error);
+          setLoading(false);
+        });
+    } else if (positionValue) {
       axios.get(`http://192.168.0.111:8081/api/v1/player?position=${encodeURIComponent(positionValue)}`)
-      .then(response => {
-        setPlayerData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-    } else if (nameValue){
+        .then(response => {
+          setPlayerData(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(error);
+          setLoading(false);
+        });
+    } else if (nameValue) {
       axios.get(`http://192.168.0.111:8081/api/v1/player?name=${encodeURIComponent(nameValue)}`)
-      .then(response => {
-        setPlayerData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-    }
-    else {
+        .then(response => {
+          setPlayerData(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(error);
+          setLoading(false);
+        });
+    } else {
       setLoading(false);
     }
   }, []);
