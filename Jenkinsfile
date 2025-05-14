@@ -33,49 +33,7 @@ pipeline {
             }
         }
 
-        stage('Levantar Contenedores') {
-            steps {
-                script {
-                    // Eliminar contenedores existentes (siempre se intenta para asegurar un estado limpio)
-                    sh 'docker rm -f grandt-backend || true'
-                    sh 'docker rm -f grandt-frontend || true'
-                    sh 'docker rm -f grandt-db || true'
-
-                    // Levantar PostgreSQL (siempre)
-                    sh '''
-                        docker run -d --name ${DB_CONTAINER} \
-                        -e POSTGRES_PASSWORD=mysecretpassword \
-                        -p 5433:5432 \
-                        -v grandt-data:/docker-entrypoint-initdb.d \
-                        postgres:latest
-                    '''
-
-                    // Esperar a que PostgreSQL se inicialice correctamente (siempre)
-                    sh 'sleep 20'
-
-                    // Levantar backend (siempre)
-                    sh '''
-                        docker run -d --name grandt-backend -p 8081:8080 \
-                        --link ${DB_CONTAINER}:db \
-                        ${BACKEND_IMAGE}:latest
-                    '''
-
-                    // Levantar frontend (solo si hubo cambios en Frontend)
-                    stage('Levantar Frontend') {
-                        when {
-                            changeset "Frontend/**"
-                        }
-                        steps {
-                            sh '''
-                                docker run -d --name grandt-frontend -p 3000:3000 \
-                                ${FRONTEND_IMAGE}:latest
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-    }
+       }
 
     post {
         always {
