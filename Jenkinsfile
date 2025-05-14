@@ -50,9 +50,9 @@ pipeline {
 
                     // Copiar init.sql y players.csv al volumen
                     sh '''
-                        docker run --rm \
+                    docker run --rm \
                         -v csv-volume:/data \
-                        -v ${WORKSPACE}:/grandt \
+                        -v ${WORKSPACE}/repo:/grandt \
                         alpine sh -c "cp /grandt/init.sql /data/init.sql && cp /grandt/players.csv /data/players.csv"
                     '''
 
