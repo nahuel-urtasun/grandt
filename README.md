@@ -1,6 +1,6 @@
-# GranDT Coach Fantasy Premier League Player Finder
+# GranDT Coach Fantasy PL
 
-**GranDT Coach Fantasy Premier League Player Finder** es una aplicación web diseñada para facilitar la búsqueda y consulta de estadísticas de jugadores de la Premier League inglesa. Ideal para entusiastas del Fantasy Football, mas conocido como **Gran DT** en Argentina, esta herramienta permite a los usuarios encontrar rápidamente jugadores por equipo, posición o nacionalidad, y acceder a sus datos para tomar decisiones informadas al armar sus equipos.
+**GranDT Coach Fantasy PL** es una aplicación web diseñada para facilitar la búsqueda y consulta de estadísticas de jugadores de la Premier League inglesa. Ideal para entusiastas del Fantasy Football, mas conocido como **Gran DT** en Argentina, esta herramienta permite a los usuarios encontrar rápidamente jugadores por equipo, posición o nacionalidad, y acceder a sus datos para tomar decisiones informadas al armar sus equipos.
 
 ## Backend
 
