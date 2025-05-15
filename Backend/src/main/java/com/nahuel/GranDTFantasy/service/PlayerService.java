@@ -56,14 +56,14 @@ public class PlayerService {
         return player;
     }
 
-    public Player updatePlayer(Player updatePlayer){
+public Player updatePlayer(Player updatePlayer){
         Optional<Player> existingPlayer = playerRepository.findByName(updatePlayer.getName());
         if (existingPlayer.isPresent()){
             Player playerToUpdate = existingPlayer.get();
             playerToUpdate.setName(updatePlayer.getName());
             playerToUpdate.setPosition(updatePlayer.getPosition());
             playerToUpdate.setNation(updatePlayer.getNation());
-            playerToUpdate.setTeam_name(updatePlayer.getTeam_name());
+            playerToUpdate.setTeam_name(updatePlayer.getTeam_name()); 
 
             playerRepository.save(playerToUpdate);
             return playerToUpdate;
