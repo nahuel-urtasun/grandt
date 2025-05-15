@@ -54,12 +54,12 @@ public class Player {
     private Double expected_assists;
 
     @Column(name = "team_name")
-    private String team_name;
+    private String teamName; // ¡Renombrado a teamName!
 
     public Player() {
     }
 
-    public Player(String name, String nation, String position, Integer age, Integer mp, Integer starts, Double min, Double goals, Double assists, Double penalties, Double yellow_cards, Double red_cards, Double expected_goals, Double expected_assists, String team_name) {
+    public Player(String name, String nation, String position, Integer age, Integer mp, Integer starts, Double min, Double goals, Double assists, Double penalties, Double yellow_cards, Double red_cards, Double expected_goals, Double expected_assists, String teamName) {
         this.name = name;
         this.nation = nation;
         this.position = position;
@@ -74,7 +74,7 @@ public class Player {
         this.red_cards = red_cards;
         this.expected_goals = expected_goals;
         this.expected_assists = expected_assists;
-        this.team_name = team_name;
+        this.teamName = teamName; // ¡Usando teamName aquí!
     }
 
     public String getName() {
@@ -189,11 +189,11 @@ public class Player {
         this.expected_assists = expected_assists;
     }
 
-    public String getTeam_name() {
-        return team_name;
+    public String getTeamName() { 
+        return teamName;
     }
 
-    public void setTeam_name(String team_name) {
-        this.team_name = team_name;
+    public void setTeamName(String teamName) { 
+        this.teamName = teamName;
     }
 }
