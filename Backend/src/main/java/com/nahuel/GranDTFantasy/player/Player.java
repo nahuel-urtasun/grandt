@@ -1,6 +1,5 @@
 package com.nahuel.GranDTFantasy.player;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,50 +10,50 @@ import jakarta.persistence.Table;
 public class Player {
 
     @Id
-    @Column(name = "player")
+    @Column(name = "Player") // Coincide con la columna "Player"
     private String name;
 
-    @Column(name = "nation")
+    @Column(name = "Nation") // Coincide con la columna "Nation"
     private String nation;
 
-    @Column(name = "position")
+    @Column(name = "Pos") // Coincide con la columna "Pos"
     private String position;
 
-    @Column(name = "age")
+    @Column(name = "Age") // Coincide con la columna "Age"
     private Integer age;
 
-    @Column(name = "matches_played")
+    @Column(name = "MP") // Coincide con la columna "MP"
     private Integer mp;
 
-    @Column(name = "starts")
+    @Column(name = "Starts") // Coincide con la columna "Starts"
     private Integer starts;
 
-    @Column(name = "minutes_played")
+    @Column(name = "Min") // Coincide con la columna "Min"
     private Double min;
 
-    @Column(name = "goals")
+    @Column(name = "Gls") // Coincide con la columna "Gls"
     private Double goals;
 
-    @Column(name = "assists")
+    @Column(name = "Ast") // Coincide con la columna "Ast"
     private Double assists;
 
-    @Column(name = "penalties_scored")
+    @Column(name = "PK") // Coincide con la columna "PK"
     private Double penalties;
 
-    @Column(name = "yellow_cards")
+    @Column(name = "CrdY") // Coincide con la columna "CrdY"
     private Double yellow_cards;
 
-    @Column(name = "red_cards")
+    @Column(name = "CrdR") // Coincide con la columna "CrdR"
     private Double red_cards;
 
-    @Column(name = "expected_goals")
+    @Column(name = "xG") // Coincide con la columna "xG"
     private Double expected_goals;
 
-    @Column(name = "expected_assists")
+    @Column(name = "xAG") // Coincide con la columna "xAG"
     private Double expected_assists;
 
-    @Column(name = "team_name")
-    private String teamName; // ¡Renombrado a teamName!
+    @Column(name = "Team") // Coincide con la columna "Team"
+    private String teamName;
 
     public Player() {
     }
@@ -74,8 +73,10 @@ public class Player {
         this.red_cards = red_cards;
         this.expected_goals = expected_goals;
         this.expected_assists = expected_assists;
-        this.teamName = teamName; // ¡Usando teamName aquí!
+        this.teamName = teamName;
     }
+
+    // Getters y setters (sin cambios en los nombres de los métodos)
 
     public String getName() {
         return name;
@@ -189,11 +190,11 @@ public class Player {
         this.expected_assists = expected_assists;
     }
 
-    public String getTeamName() { 
+    public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName(String teamName) { 
+    public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
 }
