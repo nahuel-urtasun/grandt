@@ -130,7 +130,7 @@ El despliegue de la aplicación **GranDT Coach Fantasy PL** se automatiza median
       ```
       El frontend se expone en el puerto 3000 del host.
 
-### post (siempre)
+### post (always)
 
 * **Objetivo:** Realizar acciones después de que la pipeline haya finalizado, independientemente del resultado.
 * **Implementación:** Simplemente imprime el mensaje `'Pipeline completo.'` en la consola de Jenkins.
