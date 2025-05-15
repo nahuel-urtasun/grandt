@@ -63,7 +63,8 @@ public Player updatePlayer(Player updatePlayer){
             playerToUpdate.setName(updatePlayer.getName());
             playerToUpdate.setPosition(updatePlayer.getPosition());
             playerToUpdate.setNation(updatePlayer.getNation());
-            playerToUpdate.setTeam_name(updatePlayer.getTeamName()); 
+            playerToUpdate.setTeamName(updatePlayer.getTeamName());
+            
             
 
             playerRepository.save(playerToUpdate);
