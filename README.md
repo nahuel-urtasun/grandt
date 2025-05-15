@@ -73,7 +73,7 @@ El frontend realiza peticiones `GET` al endpoint `/api/v1/player` del backend pa
 
 ## Deployment con Jenkins y Docker
 
-El despliegue de la aplicación **GranDT Coach Fantasy Premier League Player Finder** se automatiza mediante una **Jenkins Pipeline** que utiliza **Docker** para la contenerización y la gestión de los servicios. La pipeline se define en el `Jenkinsfile` y consta de las siguientes etapas:
+El despliegue de la aplicación **GranDT Coach Fantasy PL** se automatiza mediante una **Jenkins Pipeline** que utiliza **Docker** para la contenerización y la gestión de los servicios. La pipeline se define en el `Jenkinsfile` y consta de las siguientes etapas:
 
 ### Clonar Repo
 
@@ -96,33 +96,39 @@ El despliegue de la aplicación **GranDT Coach Fantasy Premier League Player Fin
 
 ### Levantar Contenedores
 
-* **Objetivo:** Crear y ejecutar los contenedores Docker para la base de datos PostgreSQL, el backend Spring Boot y el frontend React.
+* **Objetivo:** Crear y ejecutar los contenedores Docker para la base de datos PostgreSQL, el backend Spring Boot y el frontend React. Además, inicializar la base de datos PostgreSQL con los datos de jugadores.
 * **Implementación:** Utiliza un bloque `script` para ejecutar comandos de Docker de forma secuencial:
     * **Eliminar Contenedores Existentes:** Se intenta eliminar los contenedores con los nombres `grandt-backend`, `grandt-frontend` y `grandt-db` si existen (`docker rm -f <nombre> || true`). El `|| true` asegura que la pipeline no falle si el contenedor no existe.
+    * **Crear Volumen para Datos (si no existe):** Se asegura de que el volumen `grandt-data` exista. Si no, se puede crear con `docker volume create grandt-data`.
+    * **Copiar Archivos de Inicialización al Volumen:** **Antes de levantar el contenedor de PostgreSQL**, los archivos `players.csv` e `init.sql` deben copiarse al volumen `grandt-data`. Esto se puede hacer en una etapa anterior de la pipeline o directamente en el servidor Jenkins. Asumiendo que estos archivos están disponibles en el workspace de Jenkins, podrías usar comandos como:
+      ```bash
+      sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/data:/mount alpine cp /mount/players.csv grandt-data:_data/'
+      sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/migration:/mount alpine cp /mount/init.sql grandt-data:_data/'
+      ```
+      **Nota:** Las rutas exactas dependerán de la estructura de tu repositorio. Estos comandos levantan un contenedor temporal de Alpine Linux, montan el directorio local y el volumen de Docker, y luego copian los archivos.
     * **Levantar PostgreSQL:** Se ejecuta un contenedor de la imagen `postgres:latest` con las siguientes configuraciones:
-        ```
-        docker run -d --name grandt-db \
-        -e POSTGRES_PASSWORD=mysecretpassword \
-        -p 5433:5432 \
-        -v grandt-data:/docker-entrypoint-initdb.d \
-        postgres:latest
-        ```
-        **Advertencia:** Considerar el uso de secretos de Jenkins para contraseñas en un entorno de producción.
-        **Nota:** Esto implica que tu host debe tener el puerto 5433 disponible. El volumen `grandt-data` sugiere la existencia de scripts de inicialización de la base de datos.
+      ```
+      docker run -d --name grandt-db \
+      -e POSTGRES_PASSWORD=mysecretpassword \
+      -p 5433:5432 \
+      -v grandt-data:/docker-entrypoint-initdb.d \
+      postgres:latest
+      ```
+      **Nota Importante:** Al montar el volumen `grandt-data` en `/docker-entrypoint-initdb.d`, PostgreSQL **ejecutará automáticamente los scripts `.sh`, `.sql` o `.sql.gz` que encuentre allí al inicializarse.** Esto significa que tu archivo `init.sql` se encargará de crear el esquema de la base de datos y `players.csv` (probablemente mediante un script en `init.sql` o un script `.sh` también dentro del volumen) se utilizará para poblar la tabla de jugadores.
     * **Esperar Inicialización de PostgreSQL:** Se introduce una pausa de 20 segundos (`sleep 20`) para dar tiempo a que el servidor PostgreSQL se inicialice correctamente antes de que el backend intente conectarse.
     * **Levantar Backend:** Se ejecuta un contenedor de la imagen `grandt-backend:latest` con las siguientes configuraciones:
-        ```
-        docker run -d --name grandt-backend -p 8081:8080 \
-        --link grandt-db:db \
-        grandt-backend:latest
-        ```
-        **Nota:** `--link` es una característica legacy de Docker; en redes Docker más modernas, se recomienda usar redes definidas por el usuario. El backend se expone en el puerto 8081 del host.
+      ```
+      docker run -d --name grandt-backend -p 8081:8080 \
+      --link grandt-db:db \
+      grandt-backend:latest
+      ```
+      **Nota:** `--link` es una característica legacy de Docker; en redes Docker más modernas, se recomienda usar redes definidas por el usuario. El backend se expone en el puerto 8081 del host.
     * **Levantar Frontend:** Se ejecuta un contenedor de la imagen `grandt-frontend:latest` con las siguientes configuraciones:
-        ```
-        docker run -d --name grandt-frontend -p 3000:3000 \
-        grandt-frontend:latest
-        ```
-        El frontend se expone en el puerto 3000 del host.
+      ```
+      docker run -d --name grandt-frontend -p 3000:3000 \
+      grandt-frontend:latest
+      ```
+      El frontend se expone en el puerto 3000 del host.
 
 ### post (siempre)
 
