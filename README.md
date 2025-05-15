@@ -51,7 +51,9 @@ Este proyecto utiliza Spring Boot para construir una API RESTful que gestiona la
   "expected_assists": 11.8,
   "teamName": "Liverpool"
 }
-Frontend
+
+
+## Frontend
 El frontend de la aplicación está construido con React y utiliza axios para comunicarse con la API backend.
 
 Tecnologías Principales:
