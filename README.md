@@ -1,9 +1,6 @@
-**GranDT Coach Fantasy** es una aplicación web diseñada para facilitar la búsqueda y consulta de estadísticas de jugadores de la Premier League inglesa. Ideal para entusiastas del Fantasy Football, mas conocido como **Gran DT** en Argentina, 
-esta herramienta permite a los usuarios encontrar rápidamente jugadores por equipo, posición o nacionalidad, y acceder a sus datos para tomar decisiones informadas al armar sus equipos.
+# GranDT Coach Fantasy Premier League Player Finder
 
-
-
-
+**GranDT Coach Fantasy Premier League Player Finder** es una aplicación web diseñada para facilitar la búsqueda y consulta de estadísticas de jugadores de la Premier League inglesa. Ideal para entusiastas del Fantasy Football, mas conocido como **Gran DT** en Argentina, esta herramienta permite a los usuarios encontrar rápidamente jugadores por equipo, posición o nacionalidad, y acceder a sus datos para tomar decisiones informadas al armar sus equipos.
 
 ## Backend
 
@@ -51,23 +48,83 @@ Este proyecto utiliza Spring Boot para construir una API RESTful que gestiona la
   "expected_assists": 11.8,
   "teamName": "Liverpool"
 }
-
+```
 
 ## Frontend
+
 El frontend de la aplicación está construido con React y utiliza axios para comunicarse con la API backend.
 
-Tecnologías Principales:
+**Tecnologías Principales:**
 
-React: Biblioteca de JavaScript para construir interfaces de usuario.
-axios: Cliente HTTP basado en promesas para realizar peticiones al backend.
-SCSS: Preprocesador de CSS para estilos.
-React Router (implícito por la navegación con parámetros): Para la navegación entre diferentes vistas o la manipulación de la URL para el filtrado.
-Manejo de Estado con Hooks (useState, useEffect): Para gestionar el estado de los componentes y realizar efectos secundarios como las llamadas a la API.
-Interacción con la API:
+* **React:** Biblioteca de JavaScript para construir interfaces de usuario.
+* **axios:** Cliente HTTP basado en promesas para realizar peticiones al backend.
+* **SCSS:** Preprocesador de CSS para estilos.
+* **React Router (implícito por la navegación con parámetros):** Para la navegación entre diferentes vistas o la manipulación de la URL para el filtrado.
+* **Manejo de Estado con Hooks (`useState`, `useEffect`):** Para gestionar el estado de los componentes y realizar efectos secundarios como las llamadas a la API.
 
-El frontend realiza peticiones GET al endpoint /api/v1/player del backend para obtener la información de los jugadores, utilizando parámetros en la URL (query parameters) para aplicar filtros:
+**Interacción con la API:**
 
-Filtrar por Equipo: Se añade el parámetro team a la URL (ej: /api/v1/player?team=Liverpool).
-Filtrar por Nacionalidad: Se añade el parámetro nation a la URL (ej: /api/v1/player?nation=Egypt).
-Filtrar por Posición: Se añade el parámetro position a la URL (ej: /api/v1/player?position=Delantero).
-Filtrar por Nombre: Se añade el parámetro name a la URL (ej: /api/v1/player?name=Mohamed%20Salah).
+El frontend realiza peticiones `GET` al endpoint `/api/v1/player` del backend para obtener la información de los jugadores, utilizando parámetros en la URL (`query parameters`) para aplicar filtros:
+
+* **Filtrar por Equipo:** Se añade el parámetro `team` a la URL (ej: `/api/v1/player?team=Liverpool`).
+* **Filtrar por Nacionalidad:** Se añade el parámetro `nation` a la URL (ej: `/api/v1/player?nation=Egypt`).
+* **Filtrar por Posición:** Se añade el parámetro `position` a la URL (ej: `/api/v1/player?position=Delantero`).
+* **Filtrar por Nombre:** Se añade el parámetro `name` a la URL (ej: `/api/v1/player?name=Mohamed%20Salah`).
+
+## Deployment con Jenkins y Docker
+
+El despliegue de la aplicación **GranDT Coach Fantasy Premier League Player Finder** se automatiza mediante una **Jenkins Pipeline** que utiliza **Docker** para la contenerización y la gestión de los servicios. La pipeline se define en el `Jenkinsfile` y consta de las siguientes etapas:
+
+### Clonar Repo
+
+* **Objetivo:** Obtener el código fuente del proyecto desde el repositorio de Git en `https://github.com/nahuel-urtasun/grandt.git`, específicamente la rama `master`.
+* **Implementación:** Utiliza el plugin `git` de Jenkins para realizar un `checkout` del código.
+
+### Construir Backend
+
+* **Objetivo:** Construir la imagen de Docker para la aplicación backend Spring Boot.
+* **Implementación:**
+    * Navega al directorio `Backend` dentro del workspace de Jenkins (`dir('Backend')`).
+    * Ejecuta el comando `docker build -t grandt-backend:latest .`. Este comando utiliza el `Dockerfile` presente en el directorio `Backend` para construir una imagen de Docker etiquetada como `grandt-backend:latest`.
+
+### Construir Frontend
+
+* **Objetivo:** Construir la imagen de Docker para la aplicación frontend React.
+* **Implementación:**
+    * Navega al directorio `Frontend` dentro del workspace de Jenkins (`dir('Frontend')`).
+    * Ejecuta el comando `docker build -t grandt-frontend:latest .`. Este comando utiliza el `Dockerfile` presente en el directorio `Frontend` para construir una imagen de Docker etiquetada como `grandt-frontend:latest`.
+
+### Levantar Contenedores
+
+* **Objetivo:** Crear y ejecutar los contenedores Docker para la base de datos PostgreSQL, el backend Spring Boot y el frontend React.
+* **Implementación:** Utiliza un bloque `script` para ejecutar comandos de Docker de forma secuencial:
+    * **Eliminar Contenedores Existentes:** Se intenta eliminar los contenedores con los nombres `grandt-backend`, `grandt-frontend` y `grandt-db` si existen (`docker rm -f <nombre> || true`). El `|| true` asegura que la pipeline no falle si el contenedor no existe.
+    * **Levantar PostgreSQL:** Se ejecuta un contenedor de la imagen `postgres:latest` con las siguientes configuraciones:
+        ```
+        docker run -d --name grandt-db \
+        -e POSTGRES_PASSWORD=mysecretpassword \
+        -p 5433:5432 \
+        -v grandt-data:/docker-entrypoint-initdb.d \
+        postgres:latest
+        ```
+        **Advertencia:** Considerar el uso de secretos de Jenkins para contraseñas en un entorno de producción.
+        **Nota:** Esto implica que tu host debe tener el puerto 5433 disponible. El volumen `grandt-data` sugiere la existencia de scripts de inicialización de la base de datos.
+    * **Esperar Inicialización de PostgreSQL:** Se introduce una pausa de 20 segundos (`sleep 20`) para dar tiempo a que el servidor PostgreSQL se inicialice correctamente antes de que el backend intente conectarse.
+    * **Levantar Backend:** Se ejecuta un contenedor de la imagen `grandt-backend:latest` con las siguientes configuraciones:
+        ```
+        docker run -d --name grandt-backend -p 8081:8080 \
+        --link grandt-db:db \
+        grandt-backend:latest
+        ```
+        **Nota:** `--link` es una característica legacy de Docker; en redes Docker más modernas, se recomienda usar redes definidas por el usuario. El backend se expone en el puerto 8081 del host.
+    * **Levantar Frontend:** Se ejecuta un contenedor de la imagen `grandt-frontend:latest` con las siguientes configuraciones:
+        ```
+        docker run -d --name grandt-frontend -p 3000:3000 \
+        grandt-frontend:latest
+        ```
+        El frontend se expone en el puerto 3000 del host.
+
+### post (siempre)
+
+* **Objetivo:** Realizar acciones después de que la pipeline haya finalizado, independientemente del resultado.
+* **Implementación:** Simplemente imprime el mensaje `'Pipeline completo.'` en la consola de Jenkins.
