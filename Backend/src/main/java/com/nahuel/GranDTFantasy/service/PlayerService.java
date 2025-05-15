@@ -25,9 +25,7 @@ public class PlayerService {
     }
 
     public List<Player> getPlayersByTeam(String teamName){
-        return playerRepository.findAll().stream()
-                .filter(player -> teamName.equals(player.getTeam_name()))
-                .collect(Collectors.toList());
+        return playerRepository.findByTeamName(teamName); // ¡Usa el método del repositorio!
     }
 
     public List<Player> getPlayersByName(String playerName){
@@ -37,11 +35,7 @@ public class PlayerService {
     }
 
     public List<Player> getPlayerByPosition(String playerPosition){
-        return playerRepository.findAll().stream()
-                .filter(player ->
-                        player.getPosition() != null &&
-                                player.getPosition().toLowerCase().contains(playerPosition.toLowerCase()))
-                .collect(Collectors.toList());
+        return playerRepository.findByPosition(playerPosition); // ¡Usa el método del repositorio!
     }
 
     public List<Player> getPlayersByNationality(String nationality){
@@ -51,8 +45,9 @@ public class PlayerService {
     }
 
     public List<Player> getPlayersByTeamAndPosition(String teamName, String position){
-        return playerRepository.findAll().stream()
-                .filter(player -> teamName.equals(player.getTeam_name()) && position.equals(player.getPosition()))
+        // Puedes crear un método personalizado en el repositorio para esto si lo necesitas más adelante
+        return playerRepository.findByTeamName(teamName).stream()
+                .filter(player -> position.toLowerCase().contains(player.getPosition().toLowerCase()))
                 .collect(Collectors.toList());
     }
 
