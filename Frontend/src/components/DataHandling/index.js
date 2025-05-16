@@ -15,7 +15,7 @@ const DataHandling = () => {
       axios.get(`http://localhost:8080/api/v1/player?team=${encodeURIComponent(teamValue)}`)
         .then(response => {
           console.log("Data fetched: ", response.data);
-          setPlayerData(response.data); // Store data in the state
+          setPlayerData(response.data); 
           setLoading(false);
         })
         .catch(error => {
@@ -24,11 +24,11 @@ const DataHandling = () => {
           setLoading(false);
         });
     } else {
-      setLoading(false); // Handle the case where no team is provided
+      setLoading(false); 
     }
-  }, []); // Empty dependency array so it runs only once when component mounts
+  }, []); 
 
-  console.log("Player Data in Render:", playerData); // This will show the current state of playerData
+  console.log("Player Data in Render:", playerData); 
 
   if (loading) {
     return <p>Loading...</p>;
