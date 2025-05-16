@@ -10,49 +10,49 @@ import jakarta.persistence.Table;
 public class Player {
 
     @Id
-    @Column(name = "Player") // Coincide con la columna "Player"
+    @Column(name = "Player")
     private String name;
 
-    @Column(name = "Nation") // Coincide con la columna "Nation"
+    @Column(name = "Nation") 
     private String nation;
 
-    @Column(name = "Pos") // Coincide con la columna "Pos"
+    @Column(name = "Pos") 
     private String position;
 
-    @Column(name = "Age") // Coincide con la columna "Age"
+    @Column(name = "Age") 
     private Integer age;
 
-    @Column(name = "MP") // Coincide con la columna "MP"
+    @Column(name = "MP") 
     private Integer mp;
 
-    @Column(name = "Starts") // Coincide con la columna "Starts"
+    @Column(name = "Starts") 
     private Integer starts;
 
-    @Column(name = "Min") // Coincide con la columna "Min"
+    @Column(name = "Min") 
     private Double min;
 
-    @Column(name = "Gls") // Coincide con la columna "Gls"
+    @Column(name = "Gls") 
     private Double goals;
 
-    @Column(name = "Ast") // Coincide con la columna "Ast"
+    @Column(name = "Ast") 
     private Double assists;
 
-    @Column(name = "PK") // Coincide con la columna "PK"
+    @Column(name = "PK") 
     private Double penalties;
 
-    @Column(name = "CrdY") // Coincide con la columna "CrdY"
+    @Column(name = "CrdY") 
     private Double yellow_cards;
 
-    @Column(name = "CrdR") // Coincide con la columna "CrdR"
+    @Column(name = "CrdR") 
     private Double red_cards;
 
-    @Column(name = "xG") // Coincide con la columna "xG"
+    @Column(name = "xG") 
     private Double expected_goals;
 
-    @Column(name = "xAG") // Coincide con la columna "xAG"
+    @Column(name = "xAG") 
     private Double expected_assists;
 
-    @Column(name = "Team") // Coincide con la columna "Team"
+    @Column(name = "Team") 
     private String teamName;
 
     public Player() {
