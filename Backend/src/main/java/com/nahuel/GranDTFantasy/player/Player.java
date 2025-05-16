@@ -76,7 +76,6 @@ public class Player {
         this.teamName = teamName;
     }
 
-    // Getters y setters (sin cambios en los nombres de los métodos)
 
     public String getName() {
         return name;
