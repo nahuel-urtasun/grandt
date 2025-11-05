@@ -1,40 +1,52 @@
-# GranDT Coach Fantasy PL
+GranDT Coach Fantasy PL
+GranDT Coach Fantasy PL is a web application designed to make it easy to search and view player statistics from the English Premier League. Ideal for Fantasy Football enthusiasts—known as Gran DT in Argentina—this tool allows users to quickly find players by team, position, or nationality and access detailed data to make informed decisions when building their fantasy teams.
 
-**GranDT Coach Fantasy PL** es una aplicación web diseñada para facilitar la búsqueda y consulta de estadísticas de jugadores de la Premier League inglesa. Ideal para entusiastas del Fantasy Football, mas conocido como **Gran DT** en Argentina, esta herramienta permite a los usuarios encontrar rápidamente jugadores por equipo, posición o nacionalidad, y acceder a sus datos para tomar decisiones informadas al armar sus equipos.
+Backend
 
-## Backend
+This project uses Spring Boot to build a RESTful API that manages football player information for a Gran DT Fantasy–style application focused on the Premier League.
 
-Este proyecto utiliza Spring Boot para construir una API RESTful que gestiona la información de jugadores de fútbol para una aplicación de Gran DT Fantasy, **enfocada en la Premier League**.
+Main Technologies:
 
-**Tecnologías Principales:**
+Java: Main programming language.
 
-* **Java:** Lenguaje de programación principal.
-* **Spring Boot:** Framework para el desarrollo rápido de aplicaciones Java.
-* **Spring Data JPA:** Abstracción para la persistencia de datos utilizando JPA.
-* **Hibernate:** Implementación de JPA utilizada por Spring Data JPA.
-* **PostgreSQL:** Base de datos relacional para almacenar la información de los jugadores.
-* **Maven:** Herramienta de gestión de proyectos y dependencias.
-* **Spring Web:** Para la creación de la API REST.
-* **Spring Test:** Para la realización de pruebas unitarias e de integración.
+Spring Boot: Framework for rapid Java application development.
 
-**Endpoints Principales de la API:**
+Spring Data JPA: Abstraction layer for data persistence using JPA.
 
-* `GET /api/v1/player`: Obtiene la lista de jugadores. Admite los siguientes parámetros para filtrar:
-    * `name`: Filtra por nombre del jugador (parcial, no sensible a mayúsculas).
-    * `team`: Filtra por nombre del equipo (sensible a mayúsculas).
-    * `position`: Filtra por posición del jugador (sensible a mayúsculas).
-    * `nation`: Filtra por nacionalidad del jugador (parcial, no sensible a mayúsculas).
-* `POST /api/v1/player`: Añade un nuevo jugador. Espera un objeto JSON en el cuerpo de la solicitud con la información del jugador (ver ejemplo en la sección de Frontend si está disponible).
-* `PUT /api/v1/player`: Actualiza la información de un jugador existente. Espera un objeto JSON en el cuerpo de la solicitud con la información actualizada del jugador (generalmente se identifica por el nombre).
-* `DELETE /api/v1/player/{playerName}`: Elimina un jugador por su nombre.
+Hibernate: JPA implementation used by Spring Data JPA.
 
-**Ejemplo de Objeto Jugador (JSON - Premier League):**
+PostgreSQL: Relational database for storing player data.
 
-```json
+Maven: Tool for project and dependency management.
+
+Spring Web: For creating REST APIs.
+
+Spring Test: For unit and integration testing.
+
+Main API Endpoints:
+
+GET /api/v1/player: Retrieves the list of players. Supports the following query parameters:
+
+name: Filter by player name (partial, case-insensitive).
+
+team: Filter by team name (case-sensitive).
+
+position: Filter by player position (case-sensitive).
+
+nation: Filter by nationality (partial, case-insensitive).
+
+POST /api/v1/player: Adds a new player. Expects a JSON object in the request body with the player’s information.
+
+PUT /api/v1/player: Updates an existing player’s information. Expects a JSON object with the updated details (usually identified by name).
+
+DELETE /api/v1/player/{playerName}: Deletes a player by name.
+
+Example Player Object (Premier League – JSON):
+
 {
   "name": "Mohamed Salah",
   "nation": "Egypt",
-  "position": "Delantero",
+  "position": "Forward",
   "age": 29,
   "mp": 38,
   "starts": 37,
@@ -48,89 +60,137 @@ Este proyecto utiliza Spring Boot para construir una API RESTful que gestiona la
   "expected_assists": 11.8,
   "teamName": "Liverpool"
 }
-```
 
-## Frontend
+Frontend
 
-El frontend de la aplicación está construido con React y utiliza axios para comunicarse con la API backend.
+The frontend is built with React and uses axios to communicate with the backend API.
 
-**Tecnologías Principales:**
+Main Technologies:
 
-* **React:** Biblioteca de JavaScript para construir interfaces de usuario.
-* **axios:** Cliente HTTP basado en promesas para realizar peticiones al backend.
-* **SCSS:** Preprocesador de CSS para estilos.
-* **React Router (implícito por la navegación con parámetros):** Para la navegación entre diferentes vistas o la manipulación de la URL para el filtrado.
-* **Manejo de Estado con Hooks (`useState`, `useEffect`):** Para gestionar el estado de los componentes y realizar efectos secundarios como las llamadas a la API.
+React: JavaScript library for building user interfaces.
 
-**Interacción con la API:**
+axios: Promise-based HTTP client for making requests to the backend.
 
-El frontend realiza peticiones `GET` al endpoint `/api/v1/player` del backend para obtener la información de los jugadores, utilizando parámetros en la URL (`query parameters`) para aplicar filtros:
+SCSS: CSS preprocessor for styling.
 
-* **Filtrar por Equipo:** Se añade el parámetro `team` a la URL (ej: `/api/v1/player?team=Liverpool`).
-* **Filtrar por Nacionalidad:** Se añade el parámetro `nation` a la URL (ej: `/api/v1/player?nation=Egypt`).
-* **Filtrar por Posición:** Se añade el parámetro `position` a la URL (ej: `/api/v1/player?position=Delantero`).
-* **Filtrar por Nombre:** Se añade el parámetro `name` a la URL (ej: `/api/v1/player?name=Mohamed%20Salah`).
+React Router (implicit through navigation with parameters): For navigating between views and managing URL-based filtering.
 
-## Deployment con Jenkins y Docker
+State Management with Hooks (useState, useEffect): For managing component state and performing side effects like API calls.
 
-El despliegue de la aplicación **GranDT Coach Fantasy PL** se automatiza mediante una **Jenkins Pipeline** que utiliza **Docker** para la contenerización y la gestión de los servicios. La pipeline se define en el `Jenkinsfile` y consta de las siguientes etapas:
+API Interaction:
+The frontend sends GET requests to /api/v1/player to retrieve player data, using URL query parameters for filtering:
 
-### Clonar Repo
+Filter by Team: /api/v1/player?team=Liverpool
 
-* **Objetivo:** Obtener el código fuente del proyecto desde el repositorio de Git en `https://github.com/nahuel-urtasun/grandt.git`, específicamente la rama `master`.
-* **Implementación:** Utiliza el plugin `git` de Jenkins para realizar un `checkout` del código.
+Filter by Nationality: /api/v1/player?nation=Egypt
 
-### Construir Backend
+Filter by Position: /api/v1/player?position=Forward
 
-* **Objetivo:** Construir la imagen de Docker para la aplicación backend Spring Boot.
-* **Implementación:**
-    * Navega al directorio `Backend` dentro del workspace de Jenkins (`dir('Backend')`).
-    * Ejecuta el comando `docker build -t grandt-backend:latest .`. Este comando utiliza el `Dockerfile` presente en el directorio `Backend` para construir una imagen de Docker etiquetada como `grandt-backend:latest`.
+Filter by Name: /api/v1/player?name=Mohamed%20Salah
 
-### Construir Frontend
+Deployment with Jenkins and Docker
 
-* **Objetivo:** Construir la imagen de Docker para la aplicación frontend React.
-* **Implementación:**
-    * Navega al directorio `Frontend` dentro del workspace de Jenkins (`dir('Frontend')`).
-    * Ejecuta el comando `docker build -t grandt-frontend:latest .`. Este comando utiliza el `Dockerfile` presente en el directorio `Frontend` para construir una imagen de Docker etiquetada como `grandt-frontend:latest`.
+The deployment of GranDT Coach Fantasy PL is automated through a Jenkins Pipeline that uses Docker for containerization and service management.
+The pipeline is defined in a Jenkinsfile and consists of the following stages:
 
-### Levantar Contenedores
+Clone Repository
 
-* **Objetivo:** Crear y ejecutar los contenedores Docker para la base de datos PostgreSQL, el backend Spring Boot y el frontend React. Además, inicializar la base de datos PostgreSQL con los datos de jugadores.
-* **Implementación:** Utiliza un bloque `script` para ejecutar comandos de Docker de forma secuencial:
-    * **Eliminar Contenedores Existentes:** Se intenta eliminar los contenedores con los nombres `grandt-backend`, `grandt-frontend` y `grandt-db` si existen (`docker rm -f <nombre> || true`). El `|| true` asegura que la pipeline no falle si el contenedor no existe.
-    * **Crear Volumen para Datos (si no existe):** Se asegura de que el volumen `grandt-data` exista. Si no, se puede crear con `docker volume create grandt-data`.
-    * **Copiar Archivos de Inicialización al Volumen:** **Antes de levantar el contenedor de PostgreSQL**, los archivos `players.csv` e `init.sql` deben copiarse al volumen `grandt-data`. Esto se puede hacer en una etapa anterior de la pipeline o directamente en el servidor Jenkins. Asumiendo que estos archivos están disponibles en el workspace de Jenkins, podrías usar comandos como:
-      ```bash
-      sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/data:/mount alpine cp /mount/players.csv grandt-data:_data/'
-      sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/migration:/mount alpine cp /mount/init.sql grandt-data:_data/'
-      ```
-      **Nota:** Las rutas exactas dependerán de la estructura de tu repositorio. Estos comandos levantan un contenedor temporal de Alpine Linux, montan el directorio local y el volumen de Docker, y luego copian los archivos.
-    * **Levantar PostgreSQL:** Se ejecuta un contenedor de la imagen `postgres:latest` con las siguientes configuraciones:
-      ```
-      docker run -d --name grandt-db \
-      -e POSTGRES_PASSWORD=mysecretpassword \
-      -p 5433:5432 \
-      -v grandt-data:/docker-entrypoint-initdb.d \
-      postgres:latest
-      ```
-      **Nota Importante:** Al montar el volumen `grandt-data` en `/docker-entrypoint-initdb.d`, PostgreSQL **ejecutará automáticamente los scripts `.sh`, `.sql` o `.sql.gz` que encuentre allí al inicializarse.** Esto significa que tu archivo `init.sql` se encargará de crear el esquema de la base de datos y `players.csv` (probablemente mediante un script en `init.sql` o un script `.sh` también dentro del volumen) se utilizará para poblar la tabla de jugadores.
-    * **Esperar Inicialización de PostgreSQL:** Se introduce una pausa de 20 segundos (`sleep 20`) para dar tiempo a que el servidor PostgreSQL se inicialice correctamente antes de que el backend intente conectarse.
-    * **Levantar Backend:** Se ejecuta un contenedor de la imagen `grandt-backend:latest` con las siguientes configuraciones:
-      ```
-      docker run -d --name grandt-backend -p 8081:8080 \
-      --link grandt-db:db \
-      grandt-backend:latest
-      ```
-      **Nota:** `--link` es una característica legacy de Docker; en redes Docker más modernas, se recomienda usar redes definidas por el usuario. El backend se expone en el puerto 8081 del host.
-    * **Levantar Frontend:** Se ejecuta un contenedor de la imagen `grandt-frontend:latest` con las siguientes configuraciones:
-      ```
-      docker run -d --name grandt-frontend -p 3000:3000 \
-      grandt-frontend:latest
-      ```
-      El frontend se expone en el puerto 3000 del host.
+Goal: Retrieve the project source code from the Git repository at
+https://github.com/nahuel-urtasun/grandt.git
+ (branch master).
 
-### post (always)
+Implementation: Uses Jenkins’ Git plugin to check out the code.
 
-* **Objetivo:** Realizar acciones después de que la pipeline haya finalizado, independientemente del resultado.
-* **Implementación:** Simplemente imprime el mensaje `'Pipeline completo.'` en la consola de Jenkins.
+Build Backend
+
+Goal: Build the Docker image for the Spring Boot backend.
+
+Implementation:
+
+Navigate to the Backend directory.
+
+Run:
+
+docker build -t grandt-backend:latest .
+
+
+Uses the Dockerfile inside Backend to build the image.
+
+Build Frontend
+
+Goal: Build the Docker image for the React frontend.
+
+Implementation:
+
+Navigate to the Frontend directory.
+
+Run:
+
+docker build -t grandt-frontend:latest .
+
+
+Uses the Dockerfile inside Frontend.
+
+Run Containers
+
+Goal: Create and start the Docker containers for PostgreSQL, backend, and frontend, and initialize the database with player data.
+
+Implementation:
+
+Remove Existing Containers:
+
+docker rm -f grandt-backend grandt-frontend grandt-db || true
+
+
+Ensure Volume Exists:
+
+docker volume create grandt-data
+
+
+Copy Initialization Files:
+Assuming players.csv and init.sql exist in Jenkins’ workspace:
+
+sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/data:/mount alpine cp /mount/players.csv grandt-data:_data/'
+sh 'docker run --rm -v $(pwd)/Backend/src/main/resources/db/migration:/mount alpine cp /mount/init.sql grandt-data:_data/'
+
+
+Start PostgreSQL:
+
+docker run -d --name grandt-db \
+-e POSTGRES_PASSWORD=mysecretpassword \
+-p 5433:5432 \
+-v grandt-data:/docker-entrypoint-initdb.d \
+postgres:latest
+
+
+When the volume grandt-data is mounted at /docker-entrypoint-initdb.d, PostgreSQL automatically executes .sh, .sql, or .sql.gz scripts during initialization.
+
+Wait for Database Startup:
+
+sleep 20
+
+
+Start Backend:
+
+docker run -d --name grandt-backend -p 8081:8080 \
+--link grandt-db:db \
+grandt-backend:latest
+
+
+Note: --link is deprecated; modern setups use user-defined networks. The backend is exposed on port 8081.
+
+Start Frontend:
+
+docker run -d --name grandt-frontend -p 3000:3000 \
+grandt-frontend:latest
+
+
+The frontend is exposed on port 3000.
+
+Post (always)
+
+Goal: Run actions after the pipeline completes, regardless of the outcome.
+
+Implementation: Prints a simple message:
+
+Pipeline complete.
